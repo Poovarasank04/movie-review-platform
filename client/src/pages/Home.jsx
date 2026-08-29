@@ -5,21 +5,25 @@ import MovieSearch from "../components/MovieSearch";
 import TMDBMovieCard from "../components/TMDBMovieCard";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
+import MovieRow from "../components/MovieRow";
 
 import {
   getPopularTMDBMovies,
+  getTopRatedTMDBMovies,
   searchMovies,
+  discoverMovies,
   getMoviesByGenre
 } from "../services/tmdbService";
 
-
 function Home() {
+  
 
   // =========================
   // POPULAR MOVIES
   // =========================
 
-  const [movies, setMovies] = useState([]);
+  const [popularMovies, setPopularMovies] =
+  useState([]);
 
   const [popularPage, setPopularPage] =
     useState(1);
@@ -52,6 +56,49 @@ function Home() {
     { id: 878, name: "Science Fiction" },
     { id: 53, name: "Thriller" }
   ];
+
+
+  // =========================
+// DISCOVER MOVIES
+// =========================
+
+const [movies, setMovies] =
+  useState([]);
+
+const [discoverPage, setDiscoverPage] =
+  useState(1);
+
+const [discoverTotalPages, setDiscoverTotalPages] =
+  useState(1);
+
+const [discoverLoading, setDiscoverLoading] =
+  useState(false);
+
+const [discoverError, setDiscoverError] =
+  useState("");
+  // =========================
+// TOP RATED MOVIES
+// =========================
+
+const [topRatedMovies, setTopRatedMovies] =
+  useState([]);
+
+const [topRatedPage, setTopRatedPage] =
+  useState(1);
+
+const [topRatedTotalPages, setTopRatedTotalPages] =
+  useState(1);
+
+const [topRatedLoading, setTopRatedLoading] =
+  useState(true);
+
+const [topRatedLoadingMore, setTopRatedLoadingMore] =
+  useState(false);
+
+const [topRatedError, setTopRatedError] =
+  useState("");
+
+
   // =========================
   // SEARCH
   // =========================
@@ -85,7 +132,7 @@ function Home() {
         const response =
           await getPopularTMDBMovies(1);
 
-        setMovies(response.movies);
+        setPopularMovies(response.movies);
 
         setPopularPage(response.page);
 
@@ -115,6 +162,107 @@ function Home() {
 
 
   // =========================
+// LOAD TOP RATED MOVIES
+// =========================
+
+useEffect(() => {
+
+  const loadTopRatedMovies = async () => {
+
+    try {
+
+      setTopRatedLoading(true);
+      setTopRatedError("");
+
+      const response =
+        await getTopRatedTMDBMovies(1);
+
+      setTopRatedMovies(
+        response.movies
+      );
+
+      setTopRatedPage(
+        response.page
+      );
+
+      setTopRatedTotalPages(
+        response.totalPages
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      setTopRatedError(
+        "Failed to load top rated movies"
+      );
+
+    } finally {
+
+      setTopRatedLoading(false);
+
+    }
+
+  };
+
+  loadTopRatedMovies();
+
+}, []);
+
+
+// =========================
+// LOAD DISCOVER MOVIES
+// =========================
+
+useEffect(() => {
+
+  const loadDiscoverMovies = async () => {
+
+    try {
+
+      setDiscoverLoading(true);
+      setDiscoverError("");
+
+      const response =
+        await discoverMovies(
+          "",
+          1,
+          "popularity.desc"
+        );
+
+      setMovies(
+        response.movies
+      );
+
+      setDiscoverPage(
+        response.page
+      );
+
+      setDiscoverTotalPages(
+        response.totalPages
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      setDiscoverError(
+        "Failed to load discover movies"
+      );
+
+    } finally {
+
+      setDiscoverLoading(false);
+
+    }
+
+  };
+
+  loadDiscoverMovies();
+
+}, []);
+
+  // =========================
   // LOAD MORE POPULAR
   // =========================
 
@@ -134,16 +282,10 @@ function Home() {
       const nextPage =
         popularPage + 1;
 
-      const response = selectedGenre
-        ? await getMoviesByGenre(
-            selectedGenre,
-            nextPage,
-            selectedSort
-          )
-        : await getPopularTMDBMovies(
-            nextPage
-          );
-      setMovies((previousMovies) => [
+      const response =
+        await getPopularTMDBMovies(nextPage); 
+
+      setPopularMovies((previousMovies) => [
         ...previousMovies,
         ...response.movies
       ]);
@@ -161,6 +303,53 @@ function Home() {
     }
   };
 
+
+  // =========================
+// LOAD MORE TOP RATED
+// =========================
+
+const handleLoadMoreTopRated = async () => {
+
+  if (
+    topRatedLoadingMore ||
+    topRatedPage >= topRatedTotalPages
+  ) {
+    return;
+  }
+
+  try {
+
+    setTopRatedLoadingMore(true);
+
+    const nextPage =
+      topRatedPage + 1;
+
+    const response =
+      await getTopRatedTMDBMovies(
+        nextPage
+      );
+
+    setTopRatedMovies(
+      (previousMovies) => [
+        ...previousMovies,
+        ...response.movies
+      ]
+    );
+
+    setTopRatedPage(
+      response.page
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  } finally {
+
+    setTopRatedLoadingMore(false);
+
+  }
+};
   // =========================
   // NEW SEARCH
   // =========================
@@ -239,125 +428,98 @@ function Home() {
 
   };
 
-  const handleGenreChange = async (e) => {
+ const handleGenreChange = async (e) => {
 
-    const genreId = e.target.value;
+  const genreId = e.target.value;
 
-    setSelectedGenre(genreId);
-    setPopularPage(1);
+  setSelectedGenre(genreId);
+  setDiscoverPage(1);
 
-    try {
+  try {
 
-      setLoading(true);
-      setError("");
+    setDiscoverLoading(true);
+    setDiscoverError("");
 
-      if (!genreId) {
-
-        const response =
-          await getPopularTMDBMovies(1);
-
-        setMovies(response.movies);
-
-        setPopularPage(response.page);
-
-        setPopularTotalPages(
-          response.totalPages
-        );
-
-        return;
-      }
-
-      const response =
-        await getMoviesByGenre(
-          genreId,
-          1,
-          selectedSort
-        );
-
-      setMovies(response.movies);
-
-      setPopularPage(response.page);
-
-      setPopularTotalPages(
-        response.totalPages
+    const response =
+      await discoverMovies(
+        genreId,
+        1,
+        selectedSort
       );
 
-    } catch (error) {
+    setMovies(
+      response.movies
+    );
 
-      console.error(error);
+    setDiscoverPage(
+      response.page
+    );
 
-      setError(
-        "Failed to load genre movies"
-      );
+    setDiscoverTotalPages(
+      response.totalPages
+    );
 
-    } finally {
+  } catch (error) {
 
-      setLoading(false);
+    console.error(error);
 
-    }
-  };
+    setDiscoverError(
+      "Failed to load discover movies"
+    );
 
+  } finally {
 
+    setDiscoverLoading(false);
+
+  }
+
+};
   const handleSortChange = async (e) => {
 
-    const sortBy = e.target.value;
+  const sortBy = e.target.value;
 
-    setSelectedSort(sortBy);
-    setPopularPage(1);
+  setSelectedSort(sortBy);
+  setDiscoverPage(1);
 
-    try {
+  try {
 
-      setLoading(true);
-      setError("");
+    setDiscoverLoading(true);
+    setDiscoverError("");
 
-      if (!selectedGenre) {
-
-        const response =
-          await getPopularTMDBMovies(1);
-
-        setMovies(response.movies);
-
-        setPopularPage(response.page);
-
-        setPopularTotalPages(
-          response.totalPages
-        );
-
-        return;
-      }
-
-      const response =
-        await getMoviesByGenre(
-          selectedGenre,
-          1,
-          sortBy
-        );
-
-      setMovies(response.movies);
-
-      setPopularPage(response.page);
-
-      setPopularTotalPages(
-        response.totalPages
+    const response =
+      await discoverMovies(
+        selectedGenre,
+        1,
+        sortBy
       );
 
-    } catch (error) {
+    setMovies(
+      response.movies
+    );
 
-      console.error(error);
+    setDiscoverPage(
+      response.page
+    );
 
-      setError(
-        "Failed to sort movies"
-      );
+    setDiscoverTotalPages(
+      response.totalPages
+    );
 
-    } finally {
+  } catch (error) {
 
-      setLoading(false);
+    console.error(error);
 
-    }
-  };
+    setDiscoverError(
+      "Failed to sort movies"
+    );
 
+  } finally {
 
+    setDiscoverLoading(false);
 
+  }
+
+};
   return (
     <main>
 
@@ -532,6 +694,65 @@ function Home() {
 
       </section>
 
+            {/* =========================
+          DISCOVER MOVIES
+      ========================= */}
+
+      <section className="container movies-section">
+
+        <div className="section-header">
+
+          <span>
+            {movies.length} movies
+          </span>
+
+        </div>
+
+
+        {discoverLoading ? (
+
+          <Loading
+            message="Loading discover movies..."
+          />
+
+        ) : discoverError ? (
+
+          <ErrorMessage
+            message={discoverError}
+            onRetry={() => handleGenreChange({
+              target: {
+                value: selectedGenre
+              }
+            })}
+          />
+
+        ) : movies.length === 0 ? (
+
+          <EmptyState
+            icon="🎬"
+            title="No discover results"
+            message="Try changing the genre or sorting option."
+          />
+
+        ) : (
+
+          <div className="movie-grid">
+
+            {movies.map((movie) => (
+
+              <TMDBMovieCard
+                key={movie.id}
+                movie={movie}
+              />
+
+            ))}
+
+          </div>
+
+        )}
+
+      </section>
+
       {/* =========================
           POPULAR MOVIES
       ========================= */}
@@ -545,9 +766,8 @@ function Home() {
           </h2>
 
           <span>
-            {movies.length} movies
+            {popularMovies.length} movies
           </span>
-
         </div>
 
 
@@ -566,7 +786,7 @@ function Home() {
             }
           />
 
-        ) : movies.length === 0 ? (
+        ) : popularMovies.length === 0 ? (
 
           <EmptyState
             icon="🎬"
@@ -580,7 +800,7 @@ function Home() {
 
             <div className="movie-grid">
 
-              {movies.map((movie) => (
+              {popularMovies.map((movie) => (
 
                 <TMDBMovieCard
                   key={movie.id}
@@ -606,6 +826,93 @@ function Home() {
                 >
 
                   {loadingMorePopular
+                    ? "Loading..."
+                    : "Load More"}
+
+                </button>
+
+              </div>
+
+            )}
+
+          </>
+
+        )}
+
+      </section>
+
+            {/* =========================
+          TOP RATED MOVIES
+      ========================= */}
+
+      <section className="container movies-section">
+
+        <div className="section-header">
+
+          <h2>
+            Top Rated Movies
+          </h2>
+
+          <span>
+            {topRatedMovies.length} movies
+          </span>
+
+        </div>
+
+
+        {topRatedLoading ? (
+
+          <Loading
+            message="Loading top rated movies..."
+          />
+
+        ) : topRatedError ? (
+
+          <ErrorMessage
+            message={topRatedError}
+            onRetry={() =>
+              window.location.reload()
+            }
+          />
+
+        ) : topRatedMovies.length === 0 ? (
+
+          <EmptyState
+            icon="⭐"
+            title="No top rated movies"
+            message="Top rated movies are unavailable right now."
+          />
+
+        ) : (
+
+          <>
+
+            <div className="movie-grid">
+
+              {topRatedMovies.map((movie) => (
+
+                <TMDBMovieCard
+                  key={movie.id}
+                  movie={movie}
+                />
+
+              ))}
+
+            </div>
+
+
+            {topRatedPage < topRatedTotalPages && (
+
+              <div className="pagination-container">
+
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={handleLoadMoreTopRated}
+                  disabled={topRatedLoadingMore}
+                >
+
+                  {topRatedLoadingMore
                     ? "Loading..."
                     : "Load More"}
 

@@ -46,7 +46,6 @@ const request = async (path) => {
         addresses.map((address) => address.address)
       );
 
-      let lastError = null;
 
       for (const addressInfo of addresses) {
 
@@ -180,6 +179,40 @@ const getPopularMovies = async (page = 1) => {
   );
 };
 
+const getTopRatedMovies = async (page = 1) => {
+  return request(
+    `/3/movie/top_rated?page=${page}`
+  );
+};
+
+const discoverMovies = async (
+  genreId = "",
+  page = 1,
+  sortBy = "popularity.desc"
+) => {
+
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  const params = new URLSearchParams({
+    page: String(page),
+    sort_by: sortBy,
+    "primary_release_date.lte": today
+  });
+
+  if (genreId) {
+    params.set(
+      "with_genres",
+      String(genreId)
+    );
+  }
+
+  return request(
+    `/3/discover/movie?${params.toString()}`
+  );
+};
+
+
 const getMoviesByGenre = async (
   genreId,
   page = 1,
@@ -201,5 +234,7 @@ module.exports = {
   searchMovies,
   getMovieDetails,
   getPopularMovies,
+  getTopRatedMovies,
+  discoverMovies,
   getMoviesByGenre
 };

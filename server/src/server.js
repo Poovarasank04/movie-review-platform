@@ -10,9 +10,17 @@ const watchlistRoutes = require("./routes/watchlist.routes");
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.CLIENT_URL
-}));
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL?.replace(/\/$/, "")
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: allowedOrigins
+  })
+);
+
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/reviews", reviewRoutes);

@@ -4,7 +4,9 @@ const {
   searchTMDBMovies,
   getTMDBMovie,
   getPopularTMDBMovies,
-  getTMDBMoviesByGenre
+  discoverTMDBMovies,
+  getTMDBMoviesByGenre,
+  getTopRatedTMDBMovies
 } = require("../controllers/tmdbController");
 
 const router = express.Router();
@@ -17,6 +19,16 @@ router.get(
 router.get(
   "/popular",
   getPopularTMDBMovies
+);
+
+router.get(
+  "/top-rated",
+  getTopRatedTMDBMovies
+);
+
+router.get(
+  "/discover",
+  discoverTMDBMovies
 );
 
 router.get(

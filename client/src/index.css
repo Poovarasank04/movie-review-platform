@@ -2009,3 +2009,113 @@ a {
 .review-movie-info:hover h3 {
   text-decoration: underline;
 }
+
+/* =========================
+   HORIZONTAL MOVIE ROW
+========================= */
+
+.movie-row-section {
+  margin-top: 56px;
+  position: relative;
+}
+
+.movie-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.movie-row-header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.movie-row-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.movie-row-arrow {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  background: #181818;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.movie-row-arrow:hover {
+  background: #252525;
+  border-color: #555;
+}
+
+.movie-row-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.movie-row {
+  display: flex;
+  gap: 20px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+
+  padding-bottom: 8px;
+}
+
+.movie-row::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-row-card {
+  flex: 0 0 180px;
+}
+
+.movie-row-card .movie-card {
+  width: 100%;
+}
+
+.movie-row-loading {
+  min-height: 280px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #292929;
+  border-radius: 12px;
+
+  color: #888;
+}
+
+@media (max-width: 768px) {
+
+  .movie-row-section {
+    margin-top: 40px;
+  }
+
+  .movie-row-header h2 {
+    font-size: 22px;
+  }
+
+  .movie-row-card {
+    flex: 0 0 145px;
+  }
+
+  .movie-row-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+
+}

@@ -53,3 +53,36 @@ export const getMoviesByGenre = async (
 
   return response.data;
 };
+
+export const getTopRatedTMDBMovies = async (page = 1) => {
+  const response = await api.get(
+    "/tmdb/top-rated",
+    {
+      params: {
+        page
+      }
+    }
+  );
+
+  return response.data;
+};
+
+export const discoverMovies = async (
+  genreId = "",
+  page = 1,
+  sortBy = "popularity.desc"
+) => {
+
+  const response = await api.get(
+    "/tmdb/discover",
+    {
+      params: {
+        genreId,
+        page,
+        sortBy
+      }
+    }
+  );
+
+  return response.data;
+};
