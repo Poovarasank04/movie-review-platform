@@ -368,44 +368,6 @@ Environment-specific configuration prevents the deployed frontend from depending
 
 ---
 
-## 🗺️ Roadmap
-
-- [ ] More movie discovery sections
-- [ ] Advanced movie filters
-- [ ] Search sorting
-- [ ] Improved pagination UX
-- [ ] Movie recommendation system
-- [ ] User profile enhancements
-- [ ] Automated testing
-- [ ] CI/CD pipeline
-- [ ] API documentation
-- [ ] Rate limiting
-- [ ] Structured request logging
-- [ ] Performance monitoring
-- [ ] Database indexing review
-- [ ] Production observability
-
----
-
-## 🧠 Learning Goals
-
-MovieHub is also an engineering-learning project focused on:
-
-- Full-stack application development
-- REST API design
-- Authentication and authorization
-- Database modeling
-- External API integration
-- Network resilience
-- Frontend state management
-- Production deployment
-- Git/GitHub workflows
-- System design
-- Performance measurement
-- Production engineering practices
-
----
-
 ## 📄 License
 
 This project is currently intended as a personal portfolio and learning project.
