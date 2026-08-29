@@ -223,16 +223,6 @@ cd server
 npm install
 ```
 
-Create `server/.env`:
-
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-TMDB_READ_ACCESS_TOKEN=your_tmdb_read_access_token
-CLIENT_URL=http://localhost:5173
-```
-
 Run:
 
 ```bash
@@ -317,65 +307,6 @@ GitHub Repository
                                   ├── MongoDB
                                   └── TMDB
 ```
-
-### Frontend
-
-```text
-Root Directory: client
-Build Command: npm install && npm run build
-Publish Directory: dist
-```
-
-Production:
-
-```env
-VITE_API_URL=https://movie-review-platform-e0kd.onrender.com/api
-```
-
-### Backend
-
-```text
-Root Directory: server
-Build Command: npm install
-Start Command: npm start
-```
-
-Production:
-
-```env
-CLIENT_URL=https://movie-review-platform-1-xvpl.onrender.com
-```
-
----
-
-## 🧪 Production Verification
-
-The deployed application was verified through the main application flow:
-
-```text
-Frontend
-   ↓
-Backend API
-   ↓
-MongoDB / TMDB
-```
-
-Verified functionality includes:
-
-- Application loading
-- Popular movie retrieval
-- TMDB search
-- Genre filtering
-- Movie details
-- Authentication
-- Reviews
-- Review editing/deletion
-- Watchlist operations
-- Profile activity
-- Production API health check
-
----
-
 ## 📊 Engineering Results & Accomplishments
 
 ### Implemented engineering accomplishments
@@ -395,30 +326,6 @@ Verified functionality includes:
 - Kept database credentials, JWT secrets, and TMDB credentials outside the source repository.
 - Diagnosed and resolved a production CORS origin mismatch.
 - Added backend-side TMDB networking resilience with IPv4 resolution, retries, HTTPS SNI, and request timeouts.
-
-### 📈 Performance metrics
-
-**Do not claim arbitrary numbers such as "99% latency reduction" without measurement.**
-
-For a production-grade portfolio, measure a defined baseline and then report the real improvement:
-
-| Metric | Before | After | Improvement |
-|---|---:|---:|---:|
-| API p95 latency | Measure | Measure | Calculate |
-| Frontend initial load | Measure | Measure | Calculate |
-| TMDB request failure rate | Measure | Measure | Calculate |
-| API error rate | Measure | Measure | Calculate |
-| Production availability | Measure | Measure | Calculate |
-
-Once measured, use evidence-based statements such as:
-
-> Reduced API p95 latency from **X ms to Y ms**, a **Z% improvement**, after [specific optimization].
-
-> Reduced TMDB request failure rate from **X% to Y%** through retry and connection-resilience improvements.
-
-This keeps the project credible in technical interviews.
-
----
 
 ## 🧠 Engineering Challenges Solved
 
@@ -496,14 +403,6 @@ MovieHub is also an engineering-learning project focused on:
 - System design
 - Performance measurement
 - Production engineering practices
-
----
-
-## 👨‍💻 Author
-
-**Poovarasan**
-
-GitHub: https://github.com/Poovarasank04
 
 ---
 
